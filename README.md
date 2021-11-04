@@ -1,5 +1,5 @@
-# Validador De Cedula Nicaraguense
-Validador de Cedula Nicaragüense Para Javascript Capaz de validar fecha de nacimiento y letra del Documento
+# Validador De Cedula Nicaragüense
+Validador de Cedula De Nicaragua con Javascript, capaz de validar la fecha de nacimiento y letra del Documento de identidad
 
 ## ¿Como Funciona?
 - Descarga el componente
