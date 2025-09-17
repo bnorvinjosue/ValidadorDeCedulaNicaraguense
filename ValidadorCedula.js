@@ -1,128 +1,41 @@
 'use strict';
 /*
  *  Validador de Número de Cédula Nicaragüense
- *  Copyright (C) 2021 Norvin Bustamante <norving@butamante.rocks>
+ *  Copyright (C) 2021 Norvin Bustamante
 */
 
-/*Funcion para validar Fecha de Cedula*/
-function validarFecha(codigo)
-{
-    let res = false;
-    let day = codigo.substr(3,2);
-    let mounth =codigo.substr(5,2);
-    /*Valida si el mes es verdadero*/
-    if(mounth<=12)
-    {
-        /*Valida si contiene los 31 dia del año, llega hasta el 7 porque despues de julio agosto tambien tiene 31 dias en el*/
-        if(mounth<=7){
-            /*Valida si es impar*/
-            if(mount& 1)
-            {
-                if(day<=31 && day>=1)
-                {
-                    res=true;
-                    return res;
-                }else{
-                    return res;
-                }
-            }else
-            {
-                if (mount==2)
-                {
-                    /*Valida si es otro mes que febrero*/
-                    if(day<=29 && day>=1)
-                    {
-                        res=true;
-                        return res;
-                    }
-                    else
-                    {
-                        return res;
-                    }
-                }
-                else
-                {
-                    if(day<=30 && day>=1)
-                    {
-                        res=true;
-                        return res;
-                    }
-                    else
-                    {
-                        return res;
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (mounth%2 == 0)
-            {
-                if(day<=31 && day>=1)
-                {
-                    res=true;
-                    return res;
-                }else{
-                    return res;
-                }
-            }
-            else
-            {
-                if(day<=30 && day>=1)
-                {
-                    res=true;
-                    return res;
-                }
-                else
-                {
-                    return res;
-                }
+/* Función para validar Fecha de Cédula */
+function validarFecha(codigo) {
+    const day = parseInt(codigo.substr(3, 2), 10);
+    const month = parseInt(codigo.substr(5, 2), 10);
 
-            }
-        }
-    }
-    else
-    {
-        return res;
-    }
-}
-/*Funcion para validar Letra*/
-function validarletra(cedula,letras="ABCDEFGHJKLMNPQRSTUVWXY")
-{
-    let letraCedula = cedula.replaceAll(/-/g,'').substr('-1','1');
-    let numero = parseInt(cedula);
-    let letra = numero-Math.floor(numero/23)*23
-    if(letras.substr(letra,1)==letraCedula){
-        return true;
-    }else
-    {
-        return false
-    }
+    if (month < 1 || month > 12) return false;
 
+    // Cantidad de días por mes (sin validar bisiesto porque la cédula lo permite hasta 29 en febrero)
+    const diasPorMes = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+    return day >= 1 && day <= diasPorMes[month - 1];
 }
-function validarCedula(cedula)
-{
-    /*Declaración de variables*/
-    let  res = false;
-    let letras = 'ABCDEFGHJKLMNPQRSTUVWXY';
-    let expresion = /[0-9]{13}[A-Za-z]{1}/g;
-    let codigo = cedula.replaceAll(/-/g,'');
-    let test = expresion.test(codigo);
-    /*Valida si contiene todos los digitos de la cedula de lo contrario regresa un falso*/
-    if(test){
-        /*Valida la fecha de nacimiento*/
-        if(validarFecha(codigo))
-        {
-            /*Valida la letra y devuelve la respuesta final con un true o false*/
-            return validarletra(codigo);
-        }
-        else
-        {
-            return  res;
-        }
-    }
-    else
-    {
-        return res;
-    }
+
+/* Función para validar Letra */
+function validarLetra(cedula, letras = "ABCDEFGHJKLMNPQRSTUVWXY") {
+    const codigo = cedula.replace(/-/g, '');
+    const letraCedula = codigo.slice(-1); // Último carácter
+    const numero = parseInt(codigo.slice(0, -1), 10);
+
+    const indice = numero % 23;
+    return letras[indice] === letraCedula;
 }
+
+/* Función para validar Cédula completa */
+function validarCedula(cedula) {
+    const letras = 'ABCDEFGHJKLMNPQRSTUVWXY';
+    const expresion = /^[0-9]{13}[A-Za-z]$/;
+    const codigo = cedula.replace(/-/g, '');
+
+    if (!expresion.test(codigo)) return false;
+    if (!validarFecha(codigo)) return false;
+
+    return validarLetra(codigo, letras);
+}
+
